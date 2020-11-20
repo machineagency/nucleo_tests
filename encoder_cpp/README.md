@@ -9,6 +9,7 @@ This feature completely decouples having to count encoder steps using the proces
 ### Nucleo Setup
 Remove JP6 (jumper pin 6) to disconnect some other clashing signals on PA7.
 ![](./pics/pa7_conflict.png)
+
 (full schematic [here](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html#)
 
 Keep both device jumpers set to the Nucleo.
@@ -38,7 +39,7 @@ Install the arm toolchain (compiler etc) for Ubuntu:
 ```
 sudo apt-get install gcc-arm-none-eabi
 ```
-Add the [Black Magic UDev Rules](../bringup/99-blackmagic.rules) file to your udev rules.
+Add the [Black Magic UDev Rules](../nucleo-bringup/99-blackmagic.rules) file to your udev rules.
 (i.e: place them in the /etc/udev/rules.d directory.)
 You may need sudo permissions to put the file there.
 
