@@ -1,0 +1,35 @@
+*-cache.lib
+*.bak
+*.kicad_pcb-bak
+
+# Binary files
+*.bin
+*.hex
+*.elf
+
+# Netlists
+*.net
+
+# Gerber formats
+*.gbl
+*.gbs
+*.gbp
+*.gbo
+*.gm1
+*.gtl
+*.gts
+*.gtp
+*.gto
+*.drl
+
+# Position files
+*.pos
+
+# zip files
+*.zip
+
+bin/
+
+_autosave*
+
+obj/
