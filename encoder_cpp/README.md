@@ -10,7 +10,7 @@ This feature completely decouples having to count encoder steps using the proces
 Remove JP6 (jumper pin 6) to disconnect some other clashing signals on PA7.
 ![](./pics/pa7_conflict.png)
 
-(full schematic [here](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html#)
+(full schematic [here](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html#).)
 
 Keep both device jumpers set to the Nucleo.
 
