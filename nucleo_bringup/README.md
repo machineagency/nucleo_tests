@@ -3,7 +3,7 @@
 ## Download the Toolchain
 The old [gcc-arm-embedded](https://launchpad.net/gcc-arm-embedded/) toolchain mentions that new versions of the toolchain will no longer be released on Launchpad, so you'll have to download them directly from Arm.
 
-First Download a compressed fle of the latest release from the [Arm Developer Downloads Page](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
+First download a compressed fle of the latest release from the [Arm Developer Downloads Page](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
 
 Inflate it with:
 ```
@@ -14,7 +14,7 @@ where the above file year and quarterly release value are updated.
 Put the resulting folder somewhere in your system folder directory structure.
 I made a folder called *Applications*, who's full path is */home/poofjunior/Applications*.
 
-Add the *bin* subdirectory to your path permanantly by adding the line below to your .bashrc file in your home directory.
+Add the *bin* subdirectory to your path permanantly by adding the line below to your *.bashrc* file in your home directory.
 ```
 export PATH=$PATH:/home/poofjunior/Applications/gcc-arm-none-eabi-7-20xx-qx-update/bin/
 ```
@@ -33,7 +33,7 @@ Reload the rules with:
 ```
 sudo udevadm control --reaload-rules
 ```
-Then the two ports should show up in your /dev directory as **ttyBmpGdb** and **ttyBmpTarg*.
+Then the two ports should show up in your /dev directory as **ttyBmpGdb** and **ttyBmpTarg**.
 
 ## References
 * [How to Install Arm Toolchain on Ubuntu](https://unix.stackexchange.com/questions/453032/how-to-install-a-functional-arm-cross-gcc-toolchain-on-ubuntu-18-04-bionic-beav)
