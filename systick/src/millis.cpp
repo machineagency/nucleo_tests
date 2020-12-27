@@ -1,9 +1,4 @@
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/cm3/nvic.h>
-#include <libopencm3/cm3/systick.h>
-#include <stdio.h>
-
+#include <millis.h>
 
 volatile uint32_t system_millis;
 
@@ -33,31 +28,16 @@ void sys_tick_handler(void)
     system_millis++;
 }
 
-
 void delay_ms(uint32_t delay)
 {
     uint32_t wake_time = delay + system_millis;
     while (wake_time - system_millis > 0); // Do nothing.
 }
 
-
-int main(void)
+void millis_init()
 {
+    system_millis = 0;
     setup_system_clock();
     setup_systick();
-
-    // Enable Clock for GPIO Bank B Peripheral
-    rcc_periph_clock_enable(RCC_GPIOB);
-
-    // Set GPIOs A6 and B7 to Alternate-Function Mode.
-    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO7);
-
-    while(1)
-    {
-        gpio_set(GPIOB, GPIO7);
-        delay_ms(500);
-        gpio_clear(GPIOB, GPIO7);
-        delay_ms(500);
-    }
-    return 0;
 }
+
