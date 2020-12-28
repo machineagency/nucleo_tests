@@ -75,3 +75,6 @@ attach 1
 load
 run
 ```
+
+## References
+* [Minimal Code to Startup an STM32F4](https://electronics.stackexchange.com/questions/224618/minimal-code-required-to-startup-a-stm32f4)

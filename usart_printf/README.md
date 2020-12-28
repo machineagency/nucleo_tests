@@ -18,3 +18,4 @@ make sure you setup the oscillator first, or the timing-related settings (i.e: t
 
 ## References
 * [Libopencm3 Example](https://github.com/libopencm3/libopencm3-examples/blob/master/examples/stm32/f4/nucleo-f411re/usart-stdio/usart-stdio.c)
+* [Retargeting printf to UART](https://gist.github.com/glegrain/ca92f631e578450a933c67ac3497b4df)
