@@ -16,8 +16,8 @@ const struct usb_device_descriptor dev_descriptor =
     .bDeviceSubClass = 0,
     .bDeviceProtocol = 0,
     .bMaxPacketSize0 = 64,
-    .idVendor = 0x0483,
-    .idProduct = 0x5740,
+    .idVendor = 0x0cafe,
+    .idProduct = 0x0cafe,
     .bcdDevice = 0x0200,
     .iManufacturer = 1,
     .iProduct = 2,
@@ -145,6 +145,7 @@ int main(void)
     // Setup system clock before anything else.
     setup_system_clock();
     setup_systick();
+    rcc_periph_clock_enable(RCC_GPIOA); // Setup USB peripheral clock.
     rcc_periph_clock_enable(RCC_OTGFS); // Setup USB peripheral clock.
     usart_printf_init(USART1, 115200); // For optional diagnostics.
 

@@ -9,7 +9,7 @@ from itertools import cycle
 import time
 
 # find our device
-dev = usb.core.find(idVendor=0x0483, idProduct=0x5740)
+dev = usb.core.find(idVendor=0x0cafe, idProduct=0x0cafe)
 
 # was it found?
 if dev is None:
