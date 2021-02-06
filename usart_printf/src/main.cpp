@@ -13,7 +13,7 @@ int main(void)
     // Enable Clock for GPIO Bank B Peripheral
     rcc_periph_clock_enable(RCC_GPIOB);
 
-    // Set GPIOs A6 and B7 to Alternate-Function Mode.
+    // Set GPIO B7 to Output Mode.
     gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO7);
 
     while(1)
