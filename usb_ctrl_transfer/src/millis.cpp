@@ -4,10 +4,13 @@ volatile uint32_t system_millis;
 
 void setup_system_clock()
 {
-    // Configure the clock for 216MHz, external 8MHz oscillator from STLink's MCO output.
+    // Configure clock for 216MHz, ext 8MHz oscillator from STLink's MCO output.
+    // This is the default Nucleo board configuration assuming you have not
+    // (1) disconnected the ST-Link and
+    // (2) populated X3 with a supplementary oscillator.
     //rcc_clock_setup_hse(&rcc_3v3[RCC_CLOCK_3V3_216MHZ], 8);
 
-    // Configure the clock for 216MHz using the internal oscillator.
+    // Configure clock for 216MHz using the internal oscillator.
     rcc_clock_setup_hsi(&rcc_3v3[RCC_CLOCK_3V3_216MHZ]);
 }
 

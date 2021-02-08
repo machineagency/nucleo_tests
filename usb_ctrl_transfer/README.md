@@ -39,3 +39,7 @@ make sure you setup the oscillator first, or the timing-related settings (i.e: t
 ## References
 * [Mew](https://github.com/konachan700/Mew/tree/master/bootloader/drivers/usb)
 * [USB Simple](https://github.com/libopencm3/libopencm3-examples/tree/master/examples/stm32/f1/stm32-h107/usb_simple)
+* [Virtual Com Port](https://github.com/libopencm3/libopencm3-examples/blob/master/examples/stm32/f4/stm32f4-discovery/usb_cdcacm/cdcacm.c)
+* [USB HID](https://github.com/libopencm3/libopencm3-examples/blob/master/examples/stm32/f1/other/usb_hid/usbhid.c)
+* [Pill Duck](https://satoshinm.github.io/blog/171227_stm32hid_pill_duck_scriptable_usb_hid_device_using_an_stm32_blue_pill_from_mouse_jigglers_to_rubber_duckies.html)
+* [Applying Open Pull Requests on LibopenCM3](https://github.com/libopencm3/libopencm3/issues/1309)

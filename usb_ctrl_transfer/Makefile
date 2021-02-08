@@ -32,7 +32,8 @@ src/usart_printf.cpp
 # Add more source files here.
 
 # C source files
-C_SOURCES = 
+C_SOURCES = \
+#src/main.c
 
 # ASM source files
 ASM_SOURCES = 
@@ -45,16 +46,16 @@ PREFIX = arm-none-eabi-
 #     make GCC_PATH=/path/to/gcc/bin/folder
 # or you can define GCC_PATH as an environment variable.
 ifdef GCC_PATH
-CC = $(GCC_PATH)/$(PREFIX)g++
-AS = $(GCC_PATH)/$(PREFIX)g++ -x assembler-with-cpp
+CC = $(GCC_PATH)/$(PREFIX)gcc
+AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
 CP = $(GCC_PATH)/$(PREFIX)objcopy
 SZ = $(GCC_PATH)/$(PREFIX)size
 DB = $(GCC_PATH)/$(PREFIX)gdb
 # If GCC_PATH is not defined, this Makefile expects that the gcc bin path has
 # been added to your system path.
 else
-CC = $(PREFIX)g++
-AS = $(PREFIX)g++ -x assembler-with-cpp
+CC = $(PREFIX)gcc
+AS = $(PREFIX)gcc -x assembler-with-cpp
 CP = $(PREFIX)objcopy
 SZ = $(PREFIX)size
 DB = $(PREFIX)gdb
