@@ -22,12 +22,24 @@ If you have altered any jumpers, then ensure that the following jumpers on the b
 | SB 187      | ON            |
 | JP 04       | ON            |
 
-## Software Setup
-For the python side of this project, you'll need to install [pyusb](https://github.com/pyusb/pyusb)
+Additionally, connect two encoders to pins TODO and TODO
 
+## Software Setup
+For the python side of this project, you'll need to install [pyusb](https://github.com/pyusb/pyusb) and [fixedint](https://pypi.org/project/fixedint/).
 
 ## Implementation
-TODO
+Here's the main idea.
+
+First, we'll setup TIM2 and TIM3 to measure the data from two encoders.
+The timer hardware basically counts encoder ticks automatically in a way where we can just read the current tick count out of a register.
+Nifty.
+
+Then we'll need to sample the encoder value at a particular sampling frequency.
+To do that, we'll use Timer 7 to generate an interrupt at a specified interval.
+
+Finally, since data is transferred across USB in bulk (64-byte) packets, we'll want to aggregate out sampled data into a ping-pong buffer.
+The idea is that one buffer can be used to output data across USB while the other one is aggregating encoder data for the next transfer.
+Then we flip-flop ad-infinitum.
 
 
 ## Code
@@ -43,5 +55,6 @@ make sure you setup the oscillator first, or the timing-related settings (i.e: t
 * [USB HID](https://github.com/libopencm3/libopencm3-examples/blob/master/examples/stm32/f1/other/usb_hid/usbhid.c)
 * [Pill Duck](https://satoshinm.github.io/blog/171227_stm32hid_pill_duck_scriptable_usb_hid_device_using_an_stm32_blue_pill_from_mouse_jigglers_to_rubber_duckies.html)
 * [Applying Open Pull Requests on LibopenCM3](https://github.com/libopencm3/libopencm3/issues/1309)
-* [USB Blink (with bulk transfer demo)](https://github.com/joh/libopencm3-examples/blob/usb_blink/examples/stm32/f4/stm32f4-discovery/usb_blink/usb_blink.c)
-* [PyUSB Tutorial](https://github.com/pyusb/pyusb/blob/master/docs/tutorial.rst)
+* [Timer Setup](https://bdebyl.net/post/stm32-part1/)
+* [Libopencm3 Timer Setup Example](https://github.com/libopencm3/libopencm3-examples/blob/master/examples/stm32/f4/stm32f4-discovery/timer/timer.c)
+* [Libopencm3 Timer Setup Example 2](https://github.com/libopencm3/libopencm3-examples/blob/master/examples/stm32/f1/other/timer_interrupt/timer.c)
