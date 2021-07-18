@@ -27,6 +27,8 @@ Additionally, connect two encoders to pins TODO and TODO
 ## Software Setup
 For the python side of this project, you'll need to install [pyusb](https://github.com/pyusb/pyusb) and [fixedint](https://pypi.org/project/fixedint/).
 
+If you're on Linux, you'll need to apply udev rules like the ones here such that you can avoid running this program as root.
+
 ## Implementation
 Here's the main idea.
 

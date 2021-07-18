@@ -93,7 +93,11 @@ void setup_sampling_timer(void)
 
     // TODO: why 4800? (Isn't rcc_apb1_frequency defaulting to 16000000?)
     timer_set_prescaler(TIM7, rcc_apb1_frequency/4800); // 10KHz per increment
-    timer_set_period(TIM7, 1000); // Set TIM_ARR value. 1000 ticks at 10KHz = 10Hz.
+    //timer_set_period(TIM7, 1000); // Set TIM_ARR value. 1000 ticks at 10KHz = 10Hz.
+    //timer_set_period(TIM7, 100); // Set TIM_ARR value. 100 ticks at 10KHz = 100Hz.
+    //timer_set_period(TIM7, 10); // Set TIM_ARR value. 10 ticks at 10KHz = 1KHz.
+    //timer_set_period(TIM7, 1); // Set TIM_ARR value. 1 tick at 10KHz = 10KHz.
+    timer_set_period(TIM7, 2); // Set TIM_ARR value. 2 ticks at 10KHz = 5KHz.
     //timer_set_period(TIM7, 333); // Set TIM_ARR value. 333 ticks at 10KHz = 30Hz
     // TODO: should this be 999? Is 0 counted?
 
@@ -151,7 +155,8 @@ void tim7_isr(void)
     ++usb_pkt_write_index;
 
     // Check Buffer index. Switch buffers if necessary.
-    if (usb_pkt_write_index > DATAPTS_PER_PKT)
+    // Last write index is (DATAPTS_PER_PKT - 1) since we write at index 0.
+    if (usb_pkt_write_index > DATAPTS_PER_PKT - 1)
     {
         // ID the packet before transmitting so we can sort them on the receiving end.
         sampling_buffer[0] = usb_pkt_index & 0xFF;
