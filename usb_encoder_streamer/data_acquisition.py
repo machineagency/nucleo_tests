@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import usb.core # installed from pyusb
 import usb.util
 import sys

@@ -14,6 +14,8 @@ uint8_t DATAPTS_PER_PKT = 15;
 //  7 uint32_t's of sequential amt encoder data,
 //  7 uint32_t's of sequential heds encoder data]
 
+// Most datatypes marked 'volatile' are being modified within ISRs.
+
 // Callback fn for handling control transfers.
 static enum usbd_request_return_codes simple_control_cb(
         usbd_device *usbd_dev, struct usb_setup_data *req, uint8_t **buf,
@@ -89,8 +91,10 @@ void setup_sampling_timer(void)
                    TIM_CR1_CMS_EDGE, // Edge alignment.
                    TIM_CR1_DIR_UP); // Up-counting counter
 
+    // TODO: why 4800? (Isn't rcc_apb1_frequency defaulting to 16000000?)
     timer_set_prescaler(TIM7, rcc_apb1_frequency/4800); // 10KHz per increment
     timer_set_period(TIM7, 1000); // Set TIM_ARR value. 1000 ticks at 10KHz = 10Hz.
+    //timer_set_period(TIM7, 333); // Set TIM_ARR value. 333 ticks at 10KHz = 30Hz
     // TODO: should this be 999? Is 0 counted?
 
     timer_disable_preload(TIM7);
@@ -101,24 +105,24 @@ void setup_sampling_timer(void)
     timer_enable_irq(TIM7, TIM_DIER_UIE); // Timer 7 update interrupt enable.
 }
 
-
-
-// Create two buffers.
+// Two buffers for aggregating Encoder Data.
+// Write to one while transferring the other. Then swap.
 volatile uint8_t ping[BULK_BUFFER_SIZE];
 volatile uint8_t pong[BULK_BUFFER_SIZE];
-
+// Pointers to demarcate who is being written-to and who is being transferred.
 volatile uint8_t* sampling_buffer;
 volatile uint8_t* usb_writing_buffer;
 
-volatile uint8_t usb_pkt_index = 0;
+// A packet ID that increments once per stuffed packet.
+// Note that packets can fly as fast as 1KHz on Full Speed, so this value
+// should be sufficiently large to ID packets before rollover.
+volatile uint16_t usb_pkt_index = 0;
+// Index into the packet to determine where to write next.
 volatile uint8_t usb_pkt_write_index = 0;
+// Flag to indicate data is ready for writing.
+volatile bool usb_output_data_ready = false;
 
-// Timer7: Sample Data on a specified data rate.
-volatile bool usb_output_data_ready = false; // Flag to indicate data is ready for writing.
-/**
- * \fn tim7_isr
- * \brief samples encoder data into ping-pong buffer at specified sampling rate.
- */
+// ISR to sample the encoder data and transfer it into ping-pong buffer.
 void tim7_isr(void)
 {
     timer_clear_flag(TIM7, TIM_SR_UIF);
@@ -128,21 +132,31 @@ void tim7_isr(void)
 /*
     uint16_t amt_encoder_ticks = timer_get_counter(TIM2);
     uint16_t heds_encoder_ticks = timer_get_counter(TIM3);
+*/
+
+    // For TESTING ONLY.
+    uint16_t amt_encoder_ticks = (uint16_t)(system_millis & 0xFFFF);
+    uint16_t heds_encoder_ticks = (uint16_t)(system_millis & 0xFFFF);
+    // END FOR TESTING ONLY
 
     // Compute indices into the fifo.
     uint8_t amt_index = 2 + sizeof(amt_encoder_ticks)*usb_pkt_write_index;
     uint8_t heds_index = BULK_BUFFER_SIZE/2 + sizeof(amt_encoder_ticks)*usb_pkt_write_index;
     // Store encoder data in little-endian format.
-    sampling_buffer[amt_index] =    (amt_encoder_ticks >> 8) & 0xFF;
-    sampling_buffer[amt_index + 1] = amt_encoder_ticks & 0xFF;
-    sampling_buffer[heds_index] =    (heds_encoder_ticks >> 8) & 0xFF;
-    sampling_buffer[heds_index + 1] = heds_encoder_ticks & 0xFF;
+    sampling_buffer[amt_index] =      amt_encoder_ticks & 0xFF;
+    sampling_buffer[amt_index + 1] = (amt_encoder_ticks >> 8) & 0xFF;
+    sampling_buffer[heds_index] =     heds_encoder_ticks & 0xFF;
+    sampling_buffer[heds_index + 1] = (heds_encoder_ticks >> 8) & 0xFF;
 
     ++usb_pkt_write_index;
 
     // Check Buffer index. Switch buffers if necessary.
     if (usb_pkt_write_index > DATAPTS_PER_PKT)
     {
+        // ID the packet before transmitting so we can sort them on the receiving end.
+        sampling_buffer[0] = usb_pkt_index & 0xFF;
+        sampling_buffer[1] = (usb_pkt_index >> 8) & 0xFF;
+
         usb_pkt_write_index = 0;
         // Swap buffers.
         usb_writing_buffer = sampling_buffer;
@@ -150,6 +164,7 @@ void tim7_isr(void)
         usb_output_data_ready = true;
         ++usb_pkt_index;
     }
+/*
 */
 }
 
@@ -203,10 +218,12 @@ int main(void)
     // Main Loop: Check if it's time to write the packet, and write it.
 	while (1)
     {
-		//usbd_poll(usbd_dev); // not needed since we are using interrupts
+		//usbd_poll(usbd_dev); // not needed since we're using interrupts.
         if (usb_output_data_ready)
         {
-            usbd_ep_write_packet(usbd_dev, 0x81, bulk_buf, sizeof(bulk_buf));
+            // This casting feels dirty.
+            usbd_ep_write_packet(usbd_dev, 0x81, (const void*)usb_writing_buffer,
+                                 sizeof(ping)); // usb_writing_buffer points to ping or pong.
             usb_output_data_ready = false; // Clear the flag.
         }
     }
